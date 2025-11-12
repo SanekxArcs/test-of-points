@@ -31,7 +31,6 @@ const points: Point[] = [
   { id: 12, x: 103, y: 58, initialX: 50, initialY: 50, isBlack: false, label: '2', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
   { id: 13, x: 103, y: 73, initialX: 50, initialY: 50, isBlack: false, label: '3', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
   { id: 14, x: 103, y: 73, initialX: 50, initialY: 50, isBlack: false, label: '4', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
-  
 ];
 
 const connections = [
@@ -61,7 +60,7 @@ const connections = [
   { from: 12, to: 7, isBlack: false },
   { from: 13, to: 7, isBlack: false },
   { from: 13, to: 9, isBlack: false },
-  
+  { from: 14, to: 9, isBlack: false },
 ];
 
 function InteractivePoints() {
