@@ -67,6 +67,7 @@ function InteractivePoints() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [hoveredPoint, setHoveredPoint] = useState<number | null>(null);
   const [isAnimated, setIsAnimated] = useState(false);
+  const [pointOffsets, setPointOffsets] = useState<Map<number, { offsetX: number; offsetY: number }>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -124,16 +125,32 @@ function InteractivePoints() {
 
   return (
     <div ref={containerRef} className="relative w-full h-full">
-      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }}>
+      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: 1 }} preserveAspectRatio="none">
         {connections.map((conn, idx) => {
           const fromPoint = points.find(p => p.id === conn.from);
           const toPoint = points.find(p => p.id === conn.to);
           if (!fromPoint || !toPoint) return null;
 
-          const fromX = isAnimated ? fromPoint.x : (fromPoint.initialX ?? fromPoint.x);
-          const fromY = isAnimated ? fromPoint.y : (fromPoint.initialY ?? fromPoint.y);
-          const toX = isAnimated ? toPoint.x : (toPoint.initialX ?? toPoint.x);
-          const toY = isAnimated ? toPoint.y : (toPoint.initialY ?? toPoint.y);
+          const containerWidth = containerRef.current?.clientWidth || 1;
+          const containerHeight = containerRef.current?.clientHeight || 1;
+
+          const baseFromX = isAnimated ? fromPoint.x : (fromPoint.initialX ?? fromPoint.x);
+          const baseFromY = isAnimated ? fromPoint.y : (fromPoint.initialY ?? fromPoint.y);
+          const baseToX = isAnimated ? toPoint.x : (toPoint.initialX ?? toPoint.x);
+          const baseToY = isAnimated ? toPoint.y : (toPoint.initialY ?? toPoint.y);
+
+          const fromPixelX = (baseFromX / 100) * containerWidth;
+          const fromPixelY = (baseFromY / 100) * containerHeight;
+          const toPixelX = (baseToX / 100) * containerWidth;
+          const toPixelY = (baseToY / 100) * containerHeight;
+
+          const fromOffset = pointOffsets.get(conn.from) || { offsetX: 0, offsetY: 0 };
+          const toOffset = pointOffsets.get(conn.to) || { offsetX: 0, offsetY: 0 };
+
+          const fromX = ((fromPixelX + fromOffset.offsetX) / containerWidth) * 100;
+          const fromY = ((fromPixelY + fromOffset.offsetY) / containerHeight) * 100;
+          const toX = ((toPixelX + toOffset.offsetX) / containerWidth) * 100;
+          const toY = ((toPixelY + toOffset.offsetY) / containerHeight) * 100;
 
           return (
             <line
@@ -145,9 +162,6 @@ function InteractivePoints() {
               stroke={conn.isBlack ? '#000000' : '#FFFFFF'}
               strokeWidth="2"
               opacity="0.6"
-              style={{
-                transition: isAnimated ? 'x1 0.6s ease-out, y1 0.6s ease-out, x2 0.6s ease-out, y2 0.6s ease-out' : 'none',
-              }}
             />
           );
         })}
@@ -162,6 +176,14 @@ function InteractivePoints() {
         const magnification = calculateMagnification(pointX, pointY, magneticRadius);
         const magneticPull = calculateMagneticPull(pointX, pointY, magneticRadius);
         const isHovered = hoveredPoint === point.id;
+
+        useEffect(() => {
+          setPointOffsets(prev => {
+            const newMap = new Map(prev);
+            newMap.set(point.id, magneticPull);
+            return newMap;
+          });
+        }, [magneticPull]);
 
         const initialScale = point.initialScale ?? 1;
         const hoverScale = point.hoverScale ?? 2;
