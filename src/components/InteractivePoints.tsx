@@ -26,7 +26,7 @@ const points: Point[] = [
   { id: 7, x: 82, y: 78, initialX: 50, initialY: 50, isBlack: false, label: 'After sales', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 8, x: 95, y: 65, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 9, x: 55, y: 93, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
-  { id: 10, x: 42, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 10, x: 20, y: 80, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
 ];
 
 const connections = [
