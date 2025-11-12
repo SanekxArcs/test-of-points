@@ -50,6 +50,7 @@ const connections = [
   { from: 6, to: 8, isBlack: false },
   { from: 6, to: 9, isBlack: false },
   { from: 7, to: 8, isBlack: false },
+  { from: 7, to: 10, isBlack: false },
   { from: 8, to: 9, isBlack: false },
   { from: 9, to: 10, isBlack: true },
   { from: 10, to: 2, isBlack: false },
