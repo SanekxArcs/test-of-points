@@ -58,6 +58,8 @@ const connections = [
   { from: 11, to: 3, isBlack: false },
   { from: 12, to: 4, isBlack: false },
   { from: 12, to: 7, isBlack: false },
+  { from: 13, to: 7, isBlack: false },
+  { from: 13, to: 9, isBlack: false },
   
 ];
 
