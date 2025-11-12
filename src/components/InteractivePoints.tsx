@@ -37,7 +37,6 @@ const connections = [
   { from: 1, to: 2, isBlack: false },
   { from: 1, to: 3, isBlack: false },
   { from: 1, to: 4, isBlack: false },
-  { from: 1, to: 5, isBlack: false },
   { from: 2, to: 5, isBlack: false },
   { from: 2, to: 3, isBlack: false },
   { from: 3, to: 4, isBlack: false },
