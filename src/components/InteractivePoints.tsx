@@ -17,16 +17,16 @@ interface Point {
 }
 
 const points: Point[] = [
-  { id: 1, x: 21, y: 46, initialX: 50, initialY: 50, isBlack: false, label: 'Strategieberatung', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 24 },
-  { id: 2, x: 63, y: 28, initialX: 50, initialY: 50, isBlack: false, label: 'Netzwerkzugang', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 3, x: 75, y: 40, initialX: 50, initialY: 50, isBlack: false, label: 'Technologietransfer', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 4, x: 90, y: 52, initialX: 50, initialY: 50, isBlack: false, label: 'Lizenzpartner', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 5, x: 21, y: 46, initialX: 50, initialY: 50, isBlack: true, label: 'Montage-partner', initialScale: 0, hoverScale: 2.2, magneticRadius: 100, size: 36 },
-  { id: 6, x: 65, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Lager & Logistik', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 7, x: 82, y: 78, initialX: 50, initialY: 50, isBlack: false, label: 'After sales', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 8, x: 95, y: 65, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
-  { id: 9, x: 48, y: 82, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 2.2, magneticRadius: 100, size: 36 },
-  { id: 10, x: 42, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 1, x: 21, y: 46, initialX: 50, initialY: 50, isBlack: false, label: 'Strategieberatung', initialScale: 0, hoverScale: 1.8, magneticRadius: 20, size: 40 },
+  { id: 2, x: 63, y: 28, initialX: 50, initialY: 50, isBlack: false, label: 'Netzwerkzugang', initialScale: 0, hoverScale: 1.8, magneticRadius: 20, size: 40 },
+  { id: 3, x: 75, y: 40, initialX: 50, initialY: 50, isBlack: false, label: 'Technologietransfer', initialScale: 0, hoverScale: 1.8, magneticRadius: 20, size: 40 },
+  { id: 4, x: 90, y: 52, initialX: 50, initialY: 50, isBlack: false, label: 'Lizenzpartner', initialScale: 0, hoverScale: 1.8, magneticRadius: 20, size: 40 },
+  { id: 5, x: 26, y: 46, initialX: 50, initialY: 50, isBlack: true, label: 'Montage-partner', initialScale: 0, hoverScale: 4, magneticRadius: 20, size: 146 },
+  { id: 6, x: 65, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Lager & Logistik', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 40 },
+  { id: 7, x: 82, y: 78, initialX: 50, initialY: 50, isBlack: false, label: 'After sales', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 40 },
+  { id: 8, x: 95, y: 65, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 40 },
+  { id: 9, x: 48, y: 82, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 2.2, magneticRadius: 100, size: 40 },
+  { id: 10, x: 42, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 40 },
 ];
 
 const connections = [
