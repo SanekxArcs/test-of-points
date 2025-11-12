@@ -27,9 +27,9 @@ const points: Point[] = [
   { id: 8, x: 91, y: 91, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 9, x: 55, y: 93, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
   { id: 10, x: 20, y: 80, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
-  { id: 10, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
-  { id: 10, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
-  { id: 10, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 11, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 12, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 13, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   
 ];
 
@@ -54,6 +54,10 @@ const connections = [
   { from: 8, to: 9, isBlack: false },
   { from: 9, to: 10, isBlack: true },
   { from: 10, to: 2, isBlack: false },
+  { from: 11, to: 1, isBlack: false },
+  { from: 11, to: 3, isBlack: false },
+  { from: 10, to: 2, isBlack: false },
+  
 ];
 
 function InteractivePoints() {
