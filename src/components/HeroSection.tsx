@@ -15,7 +15,7 @@ function HeroSection() {
             </p>
           </div>
 
-          <div className="relative h-[600px] lg:h-[700px]">
+          <div className="relative h-[600px] lg:h-[1080px]">
             <InteractivePoints />
           </div>
         </div>
