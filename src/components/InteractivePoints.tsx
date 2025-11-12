@@ -30,6 +30,7 @@ const points: Point[] = [
   { id: 11, x: 107, y: 17, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 12, x: 103, y: 58, initialX: 50, initialY: 50, isBlack: false, label: '2', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
   { id: 13, x: 103, y: 73, initialX: 50, initialY: 50, isBlack: false, label: '3', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
+  { id: 14, x: 103, y: 73, initialX: 50, initialY: 50, isBlack: false, label: '4', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
   
 ];
 
