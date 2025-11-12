@@ -22,7 +22,7 @@ const points: Point[] = [
   { id: 3, x: 57, y: 29, initialX: 50, initialY: 50, isBlack: false, label: 'Technologietransfer', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 4, x: 90.5, y: 38.5, initialX: 50, initialY: 50, isBlack: true, label: 'Lizenzpartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
   { id: 5, x: 20.8, y: 47.5, initialX: 50, initialY: 50, isBlack: true, label: 'Montage-partner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 146 },
-  { id: 6, x: 65, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Lager & Logistik', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 6, x: 47, y: 53, initialX: 50, initialY: 50, isBlack: false, label: 'Lager & Logistik', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 7, x: 82, y: 78, initialX: 50, initialY: 50, isBlack: false, label: 'After sales', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 8, x: 95, y: 65, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 9, x: 55, y: 93, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
