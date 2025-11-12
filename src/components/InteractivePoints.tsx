@@ -12,36 +12,44 @@ interface Point {
   initialScale?: number;
   hoverScale?: number;
   magneticRadius?: number;
+  size?: number;
   link?: string;
 }
 
 const points: Point[] = [
-  { id: 1, x: 25, y: 15, initialX: 50, initialY: 50, isBlack: true, label: '01', initialScale: 0, hoverScale: 2, magneticRadius: 80, link: '/button1' },
-  { id: 2, x: 45, y: 35, initialX: 50, initialY: 50, isBlack: true, label: '02', initialScale: 0, hoverScale: 2, magneticRadius: 80, link: '/button2' },
-  { id: 3, x: 35, y: 60, initialX: 50, initialY: 50, isBlack: true, label: '03', initialScale: 0, hoverScale: 2, magneticRadius: 80, link: '/button3' },
-  { id: 4, x: 60, y: 20, initialX: 50, initialY: 50, isBlack: false, label: '04', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 5, x: 70, y: 45, initialX: 50, initialY: 50, isBlack: false, label: '05', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 6, x: 50, y: 75, initialX: 50, initialY: 50, isBlack: false, label: '06', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 7, x: 80, y: 30, initialX: 50, initialY: 50, isBlack: false, label: '07', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 8, x: 30, y: 85, initialX: 50, initialY: 50, isBlack: false, label: '08', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 9, x: 65, y: 65, initialX: 50, initialY: 50, isBlack: false, label: '09', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
-  { id: 10, x: 20, y: 40, initialX: 50, initialY: 50, isBlack: false, label: '10', initialScale: 0, hoverScale: 1.5, magneticRadius: 100 },
+  { id: 1, x: 78, y: 12, initialX: 50, initialY: 50, isBlack: false, label: 'Strategieberatung', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 24 },
+  { id: 2, x: 63, y: 28, initialX: 50, initialY: 50, isBlack: false, label: 'Netzwerkzugang', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 3, x: 75, y: 40, initialX: 50, initialY: 50, isBlack: false, label: 'Technologietransfer', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 4, x: 90, y: 52, initialX: 50, initialY: 50, isBlack: false, label: 'Lizenzpartner', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 5, x: 52, y: 60, initialX: 50, initialY: 50, isBlack: true, label: 'Montage-partner', initialScale: 0, hoverScale: 2.2, magneticRadius: 100, size: 36 },
+  { id: 6, x: 65, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Lager & Logistik', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 7, x: 82, y: 78, initialX: 50, initialY: 50, isBlack: false, label: 'After sales', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 8, x: 95, y: 65, initialX: 50, initialY: 50, isBlack: false, label: 'Exklusivvertrieb', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
+  { id: 9, x: 48, y: 82, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 2.2, magneticRadius: 100, size: 36 },
+  { id: 10, x: 42, y: 70, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1.8, magneticRadius: 90, size: 20 },
 ];
 
 const connections = [
-  { from: 1, to: 2, isBlack: true },
-  { from: 2, to: 3, isBlack: true },
-  { from: 3, to: 1, isBlack: true },
-  { from: 4, to: 5, isBlack: false },
-  { from: 5, to: 9, isBlack: false },
-  { from: 9, to: 6, isBlack: false },
-  { from: 6, to: 8, isBlack: false },
-  { from: 8, to: 10, isBlack: false },
-  { from: 10, to: 4, isBlack: false },
-  { from: 7, to: 4, isBlack: false },
-  { from: 1, to: 10, isBlack: false },
+  { from: 1, to: 2, isBlack: false },
+  { from: 1, to: 3, isBlack: false },
+  { from: 1, to: 4, isBlack: false },
+  { from: 1, to: 5, isBlack: true },
   { from: 2, to: 5, isBlack: false },
+  { from: 2, to: 3, isBlack: false },
+  { from: 3, to: 4, isBlack: false },
   { from: 3, to: 6, isBlack: false },
+  { from: 4, to: 5, isBlack: true },
+  { from: 4, to: 8, isBlack: false },
+  { from: 5, to: 6, isBlack: true },
+  { from: 5, to: 9, isBlack: true },
+  { from: 5, to: 10, isBlack: false },
+  { from: 6, to: 7, isBlack: false },
+  { from: 6, to: 8, isBlack: false },
+  { from: 6, to: 9, isBlack: false },
+  { from: 7, to: 8, isBlack: false },
+  { from: 8, to: 9, isBlack: false },
+  { from: 9, to: 10, isBlack: true },
+  { from: 10, to: 2, isBlack: false },
 ];
 
 function InteractivePoints() {
@@ -152,6 +160,7 @@ function InteractivePoints() {
 
         const currentX = isAnimated ? point.x : (point.initialX ?? point.x);
         const currentY = isAnimated ? point.y : (point.initialY ?? point.y);
+        const size = point.size ?? 20;
 
         return (
           <div
@@ -172,8 +181,8 @@ function InteractivePoints() {
                   : 'bg-white hover:bg-gray-100'
               } ${point.link ? 'cursor-pointer' : 'cursor-default'}`}
               style={{
-                width: '20px',
-                height: '20px',
+                width: `${size}px`,
+                height: `${size}px`,
                 left: `${magneticPull.offsetX}px`,
                 top: `${magneticPull.offsetY}px`,
                 transform: `translate(-50%, -50%) scale(${finalScale})`,
@@ -185,14 +194,15 @@ function InteractivePoints() {
               disabled={!point.link}
             />
             <span
-              className={`absolute text-sm font-semibold whitespace-nowrap ${
-                point.isBlack ? 'text-black' : 'text-white'
+              className={`absolute font-semibold whitespace-nowrap ${
+                point.isBlack ? 'text-black' : 'text-gray-700'
               }`}
               style={{
-                right: '30px',
+                right: `${size + 15}px`,
                 top: '50%',
                 transform: `translateY(-50%) scale(${magnification})`,
                 transition: 'transform 0.2s ease-out',
+                fontSize: point.isBlack ? '14px' : '13px',
               }}
             >
               {point.label}
