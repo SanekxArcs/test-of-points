@@ -17,7 +17,7 @@ interface Point {
 }
 
 const points: Point[] = [
-  { id: 1, x: 10, y: 66.5, initialX: 50, initialY: 50, isBlack: false, label: 'Strategieberatung', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 1, x: 66, y: 10, initialX: 50, initialY: 50, isBlack: false, label: 'Strategieberatung', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 2, x: 39, y: 13, initialX: 50, initialY: 50, isBlack: false, label: 'Netzwerkzugang', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 3, x: 71, y: 18, initialX: 50, initialY: 50, isBlack: false, label: 'Technologietransfer', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 4, x: 90.5, y: 38.5, initialX: 50, initialY: 50, isBlack: true, label: 'Lizenzpartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
