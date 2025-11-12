@@ -28,8 +28,8 @@ const points: Point[] = [
   { id: 9, x: 55, y: 93, initialX: 50, initialY: 50, isBlack: true, label: 'Distributionspartner', initialScale: 0, hoverScale: 4, magneticRadius: 50, size: 64 },
   { id: 10, x: 20, y: 80, initialX: 50, initialY: 50, isBlack: false, label: 'Fortbildungsprogramme', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
   { id: 11, x: 107, y: 17, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
-  { id: 12, x: 103, y: 58, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
-  { id: 13, x: 50, y: 50, initialX: 50, initialY: 50, isBlack: false, label: '1', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 40 },
+  { id: 12, x: 103, y: 58, initialX: 50, initialY: 50, isBlack: false, label: '2', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
+  { id: 13, x: 103, y: 73, initialX: 50, initialY: 50, isBlack: false, label: '3', initialScale: 0, hoverScale: 1, magneticRadius: 20, size: 1 },
   
 ];
 
