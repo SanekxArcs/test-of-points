@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import points from "../data/points";
+import connections from "../data/connections";
 
-interface Point {
+export interface Point {
   id: number;
   x: number;
   y: number;
@@ -9,105 +11,6 @@ interface Point {
   size?: number;
   link?: string;
 }
-
-const points: Point[] = [
-  { id: 1, x: 65, y: 10, isBlack: false, label: "Strategieberatung", size: 58 },
-  { id: 2, x: 30, y: 25.7, isBlack: false, label: "Netzwerkzugang", size: 58 },
-  {
-    id: 3,
-    x: 56,
-    y: 28.5,
-    isBlack: false,
-    label: "Technologietransfer",
-    size: 58,
-  },
-  {
-    id: 4,
-    x: 88.2,
-    y: 38.6,
-    isBlack: true,
-    label: "Lizenzpartner",
-    size: 64,
-    link: "/lizenzpartner",
-  },
-  {
-    id: 5,
-    x: 12.4,
-    y: 47,
-    isBlack: true,
-    label: "Montage-partner",
-    size: 64,
-    link: "/montage-partner",
-  },
-  {
-    id: 6,
-    x: 45.5,
-    y: 53.2,
-    isBlack: false,
-    label: "Lager & Logistik",
-    size: 58,
-  },
-  { id: 7, x: 85.5, y: 69.3, isBlack: false, label: "After sales", size: 58 },
-  {
-    id: 8,
-    x: 88.6,
-    y: 91,
-    isBlack: false,
-    label: "Exklusivvertrieb",
-    size: 58,
-  },
-  {
-    id: 9,
-    x: 53.5,
-    y: 93.5,
-    isBlack: true,
-    label: "Distributionspartner",
-    size: 64,
-    link: "/distributionspartner",
-  },
-  {
-    id: 10,
-    x: 20,
-    y: 79.5,
-    isBlack: false,
-    label: "Fortbildungsprogramme",
-    size: 58,
-  },
-  { id: 11, x: 107, y: 17, isBlack: false, label: "", size: 58 },
-  { id: 12, x: 103, y: 58, isBlack: false, label: "", size: 1 },
-  { id: 13, x: 103, y: 73, isBlack: false, label: "", size: 1 },
-  { id: 14, x: 111, y: 84, isBlack: false, label: "", size: 1 },
-];
-
-const connections = [
-  { from: 1, to: 2, isBlack: false },
-  { from: 1, to: 3, isBlack: false },
-  { from: 1, to: 4, isBlack: false },
-  { from: 2, to: 5, isBlack: false },
-  { from: 2, to: 3, isBlack: false },
-  { from: 3, to: 4, isBlack: false },
-  { from: 3, to: 7, isBlack: false },
-  { from: 5, to: 6, isBlack: false },
-  { from: 5, to: 10, isBlack: false },
-  { from: 6, to: 7, isBlack: false },
-  { from: 6, to: 8, isBlack: false },
-  { from: 6, to: 9, isBlack: false },
-  { from: 7, to: 8, isBlack: false },
-  { from: 7, to: 10, isBlack: false },
-  { from: 8, to: 9, isBlack: false },
-  { from: 10, to: 2, isBlack: false },
-  { from: 11, to: 1, isBlack: false },
-  { from: 11, to: 3, isBlack: false },
-  { from: 12, to: 4, isBlack: false },
-  { from: 12, to: 7, isBlack: false },
-  { from: 13, to: 7, isBlack: false },
-  { from: 13, to: 9, isBlack: false },
-  { from: 14, to: 9, isBlack: false },
-  { from: 9, to: 4, isBlack: true },
-  { from: 5, to: 4, isBlack: true },
-  { from: 9, to: 5, isBlack: true },
-  { from: 9, to: 10, isBlack: false },
-];
 
 interface PointPosition {
   circle: { x: number; y: number; size: number };
@@ -338,7 +241,7 @@ function InteractivePoints() {
         const content = (
           <>
             <div
-              className={`absolute rounded-full ${
+              className={`absolute rounded-full group ${
                 point.isBlack ? "bg-black" : "bg-white"
               }`}
               style={{
@@ -353,8 +256,8 @@ function InteractivePoints() {
               }}
             />
             <span
-              className={`absolute whitespace-nowrap ${
-                point.isBlack ? "text-black font-bold" : "text-black"
+              className={`absolute whitespace-nowrap text-black ${
+                point.isBlack ? "group-hover:font-bold" : ""
               }`}
               style={{
                 right: `${pos.circle.size / 2 + 16}px`,
