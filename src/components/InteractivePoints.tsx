@@ -11,20 +11,20 @@ interface Point {
 }
 
 const points: Point[] = [
-  { id: 1, x: 66, y: 10, isBlack: false, label: "Strategieberatung", size: 40 },
-  { id: 2, x: 31, y: 26, isBlack: false, label: "Netzwerkzugang", size: 40 },
+  { id: 1, x: 65, y: 10, isBlack: false, label: "Strategieberatung", size: 58 },
+  { id: 2, x: 30, y: 25.7, isBlack: false, label: "Netzwerkzugang", size: 58 },
   {
     id: 3,
-    x: 57,
-    y: 29,
+    x: 56,
+    y: 28.5,
     isBlack: false,
     label: "Technologietransfer",
-    size: 40,
+    size: 58,
   },
   {
     id: 4,
-    x: 90.5,
-    y: 38.5,
+    x: 88.2,
+    y: 38.6,
     isBlack: true,
     label: "Lizenzpartner",
     size: 64,
@@ -32,20 +32,34 @@ const points: Point[] = [
   },
   {
     id: 5,
-    x: 20.8,
-    y: 47.5,
+    x: 12.4,
+    y: 47,
     isBlack: true,
     label: "Montage-partner",
     size: 64,
     link: "/montage-partner",
   },
-  { id: 6, x: 47, y: 53, isBlack: false, label: "Lager & Logistik", size: 40 },
-  { id: 7, x: 88, y: 69, isBlack: false, label: "After sales", size: 40 },
-  { id: 8, x: 91, y: 91, isBlack: false, label: "Exklusivvertrieb", size: 40 },
+  {
+    id: 6,
+    x: 45.5,
+    y: 53.2,
+    isBlack: false,
+    label: "Lager & Logistik",
+    size: 58,
+  },
+  { id: 7, x: 85.5, y: 69.3, isBlack: false, label: "After sales", size: 58 },
+  {
+    id: 8,
+    x: 88.6,
+    y: 91,
+    isBlack: false,
+    label: "Exklusivvertrieb",
+    size: 58,
+  },
   {
     id: 9,
-    x: 55,
-    y: 93,
+    x: 53.5,
+    y: 93.5,
     isBlack: true,
     label: "Distributionspartner",
     size: 64,
@@ -54,15 +68,15 @@ const points: Point[] = [
   {
     id: 10,
     x: 20,
-    y: 80,
+    y: 79.5,
     isBlack: false,
     label: "Fortbildungsprogramme",
-    size: 40,
+    size: 58,
   },
-  { id: 11, x: 107, y: 17, isBlack: false, label: "1", size: 40 },
-  { id: 12, x: 103, y: 58, isBlack: false, label: "2", size: 1 },
-  { id: 13, x: 103, y: 73, isBlack: false, label: "3", size: 1 },
-  { id: 14, x: 111, y: 84, isBlack: false, label: "4", size: 1 },
+  { id: 11, x: 107, y: 17, isBlack: false, label: "", size: 58 },
+  { id: 12, x: 103, y: 58, isBlack: false, label: "", size: 1 },
+  { id: 13, x: 103, y: 73, isBlack: false, label: "", size: 1 },
+  { id: 14, x: 111, y: 84, isBlack: false, label: "", size: 1 },
 ];
 
 const connections = [
@@ -73,10 +87,7 @@ const connections = [
   { from: 2, to: 3, isBlack: false },
   { from: 3, to: 4, isBlack: false },
   { from: 3, to: 7, isBlack: false },
-  { from: 4, to: 5, isBlack: true },
-  { from: 4, to: 9, isBlack: true },
   { from: 5, to: 6, isBlack: false },
-  { from: 5, to: 9, isBlack: true },
   { from: 5, to: 10, isBlack: false },
   { from: 6, to: 7, isBlack: false },
   { from: 6, to: 8, isBlack: false },
@@ -84,7 +95,6 @@ const connections = [
   { from: 7, to: 8, isBlack: false },
   { from: 7, to: 10, isBlack: false },
   { from: 8, to: 9, isBlack: false },
-  { from: 9, to: 10, isBlack: true },
   { from: 10, to: 2, isBlack: false },
   { from: 11, to: 1, isBlack: false },
   { from: 11, to: 3, isBlack: false },
@@ -93,6 +103,10 @@ const connections = [
   { from: 13, to: 7, isBlack: false },
   { from: 13, to: 9, isBlack: false },
   { from: 14, to: 9, isBlack: false },
+  { from: 9, to: 4, isBlack: true },
+  { from: 5, to: 4, isBlack: true },
+  { from: 9, to: 5, isBlack: true },
+  { from: 9, to: 10, isBlack: false },
 ];
 
 interface PointPosition {
@@ -339,14 +353,14 @@ function InteractivePoints() {
               }}
             />
             <span
-              className={`absolute font-semibold whitespace-nowrap ${
-                point.isBlack ? "text-black" : "text-gray-700"
+              className={`absolute whitespace-nowrap ${
+                point.isBlack ? "text-black font-bold" : "text-black"
               }`}
               style={{
-                right: `${pos.circle.size / 2 + 5}px`,
+                right: `${pos.circle.size / 2 + 16}px`,
                 top: "50%",
                 transform: `translateY(-50%) translate(${pos.text.x}px, ${pos.text.y}px) scale(${pos.text.scale})`,
-                fontSize: point.isBlack ? "14px" : "13px",
+                fontSize: point.isBlack ? "22px" : "16px",
                 opacity: animationProgress,
                 transformOrigin: "right center",
                 willChange: "transform",
