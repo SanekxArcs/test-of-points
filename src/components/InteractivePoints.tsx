@@ -194,7 +194,7 @@ function InteractivePoints() {
                 point.isBlack ? 'text-black' : 'text-gray-700'
               }`}
               style={{
-                right: `${pos.circle.size + 15}px`,
+                right: `${pos.circle.size + 5}px`,
                 top: '50%',
                 transform: `translateY(-50%) translate(${pos.text.x}px, ${pos.text.y}px)`,
                 transition: 'all 0.2s ease-out',
