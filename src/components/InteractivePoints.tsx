@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import points from "../data/points";
 import connections from "../data/connections";
+import { INTERACTIVE_POINTS_CONFIG as CONFIG } from "../config/interactivePointsConfig";
 
 export interface Point {
   id: number;
@@ -35,10 +36,10 @@ function InteractivePoints() {
         const containerWidth = containerRef.current?.clientWidth || 1;
         const containerHeight = containerRef.current?.clientHeight || 1;
 
-        const baseX = (point.x / 100) * containerWidth;
-        const baseY = (point.y / 100) * containerHeight;
-        const size = point.size ?? 20;
-        const triggerDistance = size * 1.5;
+        const baseX = (point.x / CONFIG.PERCENTAGE_DIVISOR) * containerWidth;
+        const baseY = (point.y / CONFIG.PERCENTAGE_DIVISOR) * containerHeight;
+        const size = point.size ?? CONFIG.DEFAULT_POINT_SIZE;
+        const triggerDistance = size * CONFIG.TRIGGER_DISTANCE_MULTIPLIER;
 
         const distX = baseX - cursorX;
         const distY = baseY - cursorY;
@@ -52,15 +53,22 @@ function InteractivePoints() {
 
         if (hypotenuse < triggerDistance && animationProgress === 1) {
           const angle = Math.atan2(distX, distY);
-          const pull = (1 - hypotenuse / triggerDistance) / 2;
+          const pull =
+            (1 - hypotenuse / triggerDistance) / CONFIG.PULL_FORCE_DIVISOR;
           const hoverIntensity = 1 - hypotenuse / triggerDistance;
-          const textScale = point.isBlack ? 1 + hoverIntensity * 0.3 : 1;
+          const textScale = point.isBlack
+            ? 1 + hoverIntensity * CONFIG.TEXT_SCALE_INTENSITY
+            : 1;
 
           newTargets.set(point.id, {
             circle: {
               x: baseX - Math.sin(angle) * hypotenuse * pull,
               y: baseY - Math.cos(angle) * hypotenuse * pull,
-              size: size * (1 + (1 - hypotenuse / triggerDistance) * 0.8),
+              size:
+                size *
+                (1 +
+                  (1 - hypotenuse / triggerDistance) *
+                    CONFIG.CIRCLE_SIZE_MULTIPLIER),
             },
             text: {
               x: -Math.sin(angle) * hypotenuse * pull,
@@ -92,7 +100,7 @@ function InteractivePoints() {
 
   // Animate positions smoothly towards targets
   const animateToTargets = React.useCallback(() => {
-    const lerpFactor = 0.15; // Smoothness factor (lower = smoother but slower)
+    const lerpFactor = CONFIG.LERP_FACTOR;
     const currentPositions = new Map<number, PointPosition>();
     let hasChanges = false;
 
@@ -117,12 +125,15 @@ function InteractivePoints() {
         };
 
         // Check if position is significantly different
-        const threshold = 0.5;
         if (
-          Math.abs(newPos.circle.x - target.circle.x) > threshold ||
-          Math.abs(newPos.circle.y - target.circle.y) > threshold ||
-          Math.abs(newPos.circle.size - target.circle.size) > 0.1 ||
-          Math.abs(newPos.text.scale - target.text.scale) > 0.01
+          Math.abs(newPos.circle.x - target.circle.x) >
+            CONFIG.POSITION_THRESHOLD ||
+          Math.abs(newPos.circle.y - target.circle.y) >
+            CONFIG.POSITION_THRESHOLD ||
+          Math.abs(newPos.circle.size - target.circle.size) >
+            CONFIG.SIZE_THRESHOLD ||
+          Math.abs(newPos.text.scale - target.text.scale) >
+            CONFIG.SCALE_THRESHOLD
         ) {
           hasChanges = true;
         }
@@ -140,7 +151,7 @@ function InteractivePoints() {
 
   // Initial animation effect
   useEffect(() => {
-    const duration = 1000; // 1.5 seconds
+    const duration = CONFIG.ANIMATION_DURATION;
     const startTime = Date.now();
 
     const animate = () => {
@@ -197,7 +208,7 @@ function InteractivePoints() {
     <div ref={containerRef} className="relative w-full h-full">
       <svg
         className="absolute inset-0 w-full h-full"
-        style={{ zIndex: 1 }}
+        style={{ zIndex: CONFIG.SVG_Z_INDEX }}
         preserveAspectRatio="none"
       >
         {connections.map((conn, idx) => {
@@ -208,10 +219,14 @@ function InteractivePoints() {
           const containerWidth = containerRef.current?.clientWidth || 1;
           const containerHeight = containerRef.current?.clientHeight || 1;
 
-          const fromX = (fromPos.circle.x / containerWidth) * 100;
-          const fromY = (fromPos.circle.y / containerHeight) * 100;
-          const toX = (toPos.circle.x / containerWidth) * 100;
-          const toY = (toPos.circle.y / containerHeight) * 100;
+          const fromX =
+            (fromPos.circle.x / containerWidth) * CONFIG.PERCENTAGE_DIVISOR;
+          const fromY =
+            (fromPos.circle.y / containerHeight) * CONFIG.PERCENTAGE_DIVISOR;
+          const toX =
+            (toPos.circle.x / containerWidth) * CONFIG.PERCENTAGE_DIVISOR;
+          const toY =
+            (toPos.circle.y / containerHeight) * CONFIG.PERCENTAGE_DIVISOR;
 
           return (
             <line
@@ -220,11 +235,11 @@ function InteractivePoints() {
               y1={`${fromY}%`}
               x2={`${toX}%`}
               y2={`${toY}%`}
-              stroke={conn.isBlack ? "#000000" : "#FFFFFF"}
-              strokeWidth="2"
-              opacity={0.6 * animationProgress}
+              stroke={conn.isBlack ? CONFIG.BLACK_COLOR : CONFIG.WHITE_COLOR}
+              strokeWidth={CONFIG.LINE_STROKE_WIDTH}
+              opacity={CONFIG.LINE_OPACITY * animationProgress}
               style={{
-                transition: "opacity 0.3s ease-out",
+                transition: CONFIG.LINE_OPACITY_TRANSITION,
               }}
             />
           );
@@ -249,10 +264,10 @@ function InteractivePoints() {
                 height: `${pos.circle.size}px`,
                 transform: "translate(-50%, -50%)",
                 boxShadow: point.isBlack
-                  ? "none"
-                  : "0 0 20px rgba(255,255,255,0.3)",
+                  ? CONFIG.BLACK_POINT_BOX_SHADOW
+                  : CONFIG.WHITE_POINT_BOX_SHADOW,
                 opacity: animationProgress,
-                transition: "box-shadow 0.3s ease-out",
+                transition: CONFIG.BOX_SHADOW_TRANSITION,
               }}
             />
             <span
@@ -260,17 +275,20 @@ function InteractivePoints() {
                 point.isBlack ? "group-hover:font-bold" : ""
               }`}
               style={{
-                right: `${pos.circle.size / 2 + 16}px`,
+                right: `${
+                  pos.circle.size / 2 + CONFIG.TEXT_OFFSET_FROM_CIRCLE
+                }px`,
                 top: "50%",
                 transform: `translateY(-50%) translate(${pos.text.x}px, ${pos.text.y}px) scale(${pos.text.scale})`,
-                fontSize: point.isBlack ? "22px" : "16px",
+                fontSize: point.isBlack
+                  ? CONFIG.BLACK_POINT_FONT_SIZE
+                  : CONFIG.WHITE_POINT_FONT_SIZE,
                 opacity: animationProgress,
                 transformOrigin: "right center",
                 willChange: "transform",
               }}
-            >
-              {point.label}
-            </span>
+              dangerouslySetInnerHTML={{ __html: point.label }}
+            />
           </>
         );
 
@@ -279,10 +297,14 @@ function InteractivePoints() {
             key={point.id}
             className="absolute"
             style={{
-              left: `${(pos.circle.x / containerWidth) * 100}%`,
-              top: `${(pos.circle.y / containerHeight) * 100}%`,
+              left: `${
+                (pos.circle.x / containerWidth) * CONFIG.PERCENTAGE_DIVISOR
+              }%`,
+              top: `${
+                (pos.circle.y / containerHeight) * CONFIG.PERCENTAGE_DIVISOR
+              }%`,
               transform: "translate(-50%, -50%)",
-              zIndex: 10,
+              zIndex: CONFIG.POINT_Z_INDEX,
               willChange: "left, top",
             }}
           >

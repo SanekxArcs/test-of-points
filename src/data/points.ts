@@ -23,7 +23,7 @@ const points = [
     x: 12.4,
     y: 47,
     isBlack: true,
-    label: "Montage-partner",
+    label: "Montage-<br>partner",
     size: 64,
     link: "/montage-partner",
   },
