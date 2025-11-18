@@ -13,7 +13,7 @@ function HeroSection() {
             <p className="text-[clamp(18px,4vw,1.85rem)] text-white">The transition starts now.</p>
           </div>
 
-          <div className="relative h-full w-full min-h-137.5 md:pl-0 md:min-h-200 ml-auto xl:w-full md:w-2/3 lg:min-h-138.5 pb-8 lg:pb-0 xl:min-h-210 2xl:min-h-238.5 mask-r-from-90% 2xl:pb-4">
+          <div className="relative h-full w-full min-h-137.5 md:pl-0 md:min-h-200 ml-auto xl:w-full md:w-2/3 lg:min-h-138.5 pb-8 lg:pb-0 xl:min-h-210 2xl:min-h-238.5 2xl:mask-r-from-90% 2xl:pb-4">
             <InteractivePoints />
           </div>
         </div>
