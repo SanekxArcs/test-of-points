@@ -82,20 +82,48 @@ const getResponsiveValue = (
 };
 
 // Helper function to parse size value (can be string like "clamp(...)" or number)
-const parseSizeValue = (size: string | number | undefined): number => {
+const DEFAULT_VIEWPORT_WIDTH = BREAKPOINTS.xl;
+
+const parseSizeValue = (
+  size: string | number | undefined,
+  viewportWidth: number
+): number => {
   if (!size) return 50;
   if (typeof size === 'number') return size;
-  
-  // For clamp values, extract the maximum px value (last one)
-  // clamp(25px, 3.021vw, 58px) -> extract 58 (the max value)
-  const pxMatches = size.match(/(\d+(?:\.\d+)?)px/g);
-  if (pxMatches && pxMatches.length > 0) {
-    // Get the last px value which is the maximum in clamp()
-    const lastMatch = pxMatches[pxMatches.length - 1];
-    return parseFloat(lastMatch);
+
+  const clampMatch = size.match(/clamp\(([^,]+),([^,]+),([^)]+)\)/);
+
+  if (!clampMatch) {
+    const pxMatches = size.match(/(\d+(?:\.\d+)?)px/g);
+    if (pxMatches && pxMatches.length > 0) {
+      const lastMatch = pxMatches[pxMatches.length - 1];
+      return parseFloat(lastMatch);
+    }
+    return 50;
   }
-  
-  return 50;
+
+  const [, minToken, midToken, maxToken] = clampMatch.map((token) => token.trim());
+
+  const parsePx = (token: string) => {
+    const match = token.match(/(-?\d+(?:\.\d+)?)px/);
+    return match ? parseFloat(match[1]) : null;
+  };
+
+  const parseVw = (token: string) => {
+    const match = token.match(/(-?\d+(?:\.\d+)?)vw/);
+    return match ? parseFloat(match[1]) : null;
+  };
+
+  const minPx = parsePx(minToken) ?? 0;
+  const midVw = parseVw(midToken);
+  const maxPx = parsePx(maxToken) ?? minPx;
+
+  if (midVw === null) {
+    return Math.min(Math.max(minPx, maxPx), maxPx);
+  }
+
+  const midPx = (midVw / 100) * viewportWidth;
+  return Math.min(Math.max(midPx, minPx), maxPx);
 };
 
 function InteractivePoints() {
@@ -103,6 +131,9 @@ function InteractivePoints() {
     Map<number, PointPosition>
   >(new Map());
   const [animationProgress, setAnimationProgress] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth : DEFAULT_VIEWPORT_WIDTH
+  );
   const containerRef = useRef<HTMLDivElement>(null);
   const targetPositionsRef = useRef<Map<number, PointPosition>>(new Map());
   const animationFrameRef = useRef<number>();
@@ -130,7 +161,7 @@ function InteractivePoints() {
 
         const baseX = (point.x / CONFIG.PERCENTAGE_DIVISOR) * containerWidth;
         const baseY = (point.y / CONFIG.PERCENTAGE_DIVISOR) * containerHeight;
-        const size = parseSizeValue(point.size);
+        const size = parseSizeValue(point.size, viewportWidth);
         const triggerDistance = size * CONFIG.TRIGGER_DISTANCE_MULTIPLIER;
 
         let idleOffsetX = 0;
@@ -221,7 +252,7 @@ function InteractivePoints() {
 
       targetPositionsRef.current = newTargets;
     },
-    [animationProgress]
+    [animationProgress, viewportWidth]
   );
 
   const updatePointerFromEvent = React.useCallback((event: { clientX: number; clientY: number }) => {
@@ -329,6 +360,13 @@ function InteractivePoints() {
     };
 
     animate();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleResize = () => setViewportWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   // Continuously update target positions to account for idle animation and pointer changes
@@ -488,7 +526,7 @@ function InteractivePoints() {
             />
             <span
               className={`absolute whitespace-nowrap text-black leading-none ${
-                point.isBlack ? "group-hover:font-bold" : ""
+                point.isBlack ? "group-hover:font-bold" : "cursor-default"
               }`}
               style={{
                 left: "50%",
