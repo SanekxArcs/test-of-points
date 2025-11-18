@@ -1,5 +1,6 @@
 const connections = [
   { from: 1, to: 2, isBlack: false },
+  { from: 1, to: 15, isBlack: false },
   { from: 1, to: 3, isBlack: false },
   { from: 1, to: 4, isBlack: false },
   { from: 2, to: 5, isBlack: false },
@@ -22,11 +23,11 @@ const connections = [
   { from: 12, to: 7, isBlack: false },
   { from: 13, to: 7, isBlack: false },
   { from: 13, to: 9, isBlack: false },
-  { from: 14, to: 9, isBlack: false },
   { from: 9, to: 4, isBlack: true },
   { from: 5, to: 4, isBlack: true },
   { from: 9, to: 5, isBlack: true },
   { from: 9, to: 10, isBlack: false },
+  { from: 8, to: 14, isBlack: false },
 ];
 
 export default connections;

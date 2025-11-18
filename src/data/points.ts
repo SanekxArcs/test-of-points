@@ -1,7 +1,7 @@
 const sizes = {
-  SMALL: "clamp(25px,3.021vw,58px)",
-  MEDIUM: "clamp(26.5px,3vw,61.5px)",
-  LARGE: "clamp(28px,3.385vw,65px)",
+  SMALL: { "xs": 25, "sm": 45, "md": 45, "lg": 35, "xl": 46, "2xl": 58 },
+  MEDIUM: { "xs": 20, "sm": 20, "md": 25, "lg": 20, "xl": 20, "2xl": 40 },
+  LARGE: { "xs": 28, "sm": 50, "md": 50, "lg": 39, "xl": 52, "2xl": 65 },
 };
 // optional properties added:
 // scaleOnHover: true/false - scales text on hover (black circles only)
@@ -25,8 +25,8 @@ const points = [
     label: "Installation<br>Partner",
     size: sizes.LARGE,
     link: "/montage-partner",
-    textAngle: { "xs": 280, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 270 },
-    textDistance: { "xs": 20, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 40 },
+    textAngle: { "xs": 280, "sm": 280, "md": 280, "lg": 280, "xl": 270, "2xl": 270 },
+    textDistance: { "xs": 20, "sm": 20, "md": 25, "lg": 20, "xl": 20, "2xl": 40 },
     textAlign: "left",
     idleAnimation: {
       enabled: true,
@@ -43,8 +43,8 @@ const points = [
     label: "Licensing<br>Partner",
     size: sizes.LARGE,
     link: "/lizenzpartner",
-    textAngle: { "xs": 200, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 200 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 60 },
+    textAngle: { "xs": 200, "sm": 200, "md": 200, "lg": 200, "xl": 200, "2xl": 200 },
+    textDistance: { "xs": 35, "sm": 40, "md": 45, "lg": 35, "xl": 35, "2xl": 60 },
     textAlign: "right",
     idleAnimation: {
       enabled: true,
@@ -61,8 +61,8 @@ const points = [
     label: "Distribution<br>Partner",
     size: sizes.LARGE,
     link: "/distributionspartner",
-    textAngle: { "xs": 180, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 40, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 80 },
+    textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
+    textDistance: { "xs": 40, "sm": 60, "md": 60, "lg": 40, "xl": 40, "2xl": 80 },
     textAlign: "right",
     idleAnimation: {
       enabled: true,
@@ -78,8 +78,8 @@ const points = [
     isBlack: false,
     label: "Strategic<br>Consulting",
     size: sizes.SMALL,
-    textAngle: { "xs": 180, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 50 },
+    textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
+    textDistance: { "xs": 35, "sm": 40, "md": 40, "lg": 35, "xl": 35, "2xl": 50 },
     textAlign: "right",
   },
   {
@@ -89,8 +89,8 @@ const points = [
     isBlack: false,
     label: "Network<br>Access",
     size: sizes.SMALL,
-    textAngle: { "xs": 180, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 30, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 45 },
+    textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
+    textDistance: { "xs": 30, "sm": 35, "md": 35, "lg": 30, "xl": 30, "2xl": 45 },
     textAlign: "right",
   },
   {
@@ -100,8 +100,8 @@ const points = [
     isBlack: false,
     label: "Technology<br>Transfer",
     size: sizes.SMALL,
-    textAngle: { "xs": 160, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 150 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 40 },
+    textAngle: { "xs": 160, "sm": 160, "md": 160, "lg": 160, "xl": 160, "2xl": 150 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 70, "xl": 80, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -111,8 +111,8 @@ const points = [
     isBlack: false,
     label: "Warehousing<br>& Logistics",
     size: sizes.SMALL,
-    textAngle: { "xs": 160, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 40, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 40 },
+    textAngle: { "xs": 160, "sm": 160, "md": 180, "lg": 160, "xl": 160, "2xl": 180 },
+    textDistance: { "xs": 40, "sm": 50, "md": 50, "lg": 40, "xl": 40, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -122,8 +122,8 @@ const points = [
     isBlack: false,
     label: "After Sales<br>Service",
     size: sizes.SMALL,
-    textAngle: { "xs": 200, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 200 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 40 },
+    textAngle: { "xs": 200, "sm": 200, "md": 200, "lg": 200, "xl": 200, "2xl": 200 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 35, "xl": 35, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -133,8 +133,8 @@ const points = [
     isBlack: false,
     label: "Distribution",
     size: sizes.SMALL,
-    textAngle: { "xs": 180, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 50 },
+    textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 35, "xl": 35, "2xl": 50 },
     textAlign: "right",
   },
   {
@@ -144,8 +144,8 @@ const points = [
     isBlack: false,
     label: "Professional<br>Programs",
     size: sizes.SMALL,
-    textAngle: { "xs": 130, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 50, "md": 60, "lg": 70, "xl": 80, "2xl": 50 },
+    textAngle: { "xs": 130, "sm": 130, "md": 180, "lg": 130, "xl": 130, "2xl": 180 },
+    textDistance: { "xs": 35, "sm": 40, "md": 50, "lg": 35, "xl": 35, "2xl": 50 },
     textAlign: "right",
   },
   // Additional points without labels (hidden points)
@@ -183,6 +183,16 @@ const points = [
     id: 14,
     x: 111,
     y: 84,
+    isBlack: false,
+    label: "",
+    size: 1,
+    textAngle: 0,
+    textDistance: 0,
+  },
+  {
+    id: 15,
+    x: 111,
+    y: 35,
     isBlack: false,
     label: "",
     size: 1,

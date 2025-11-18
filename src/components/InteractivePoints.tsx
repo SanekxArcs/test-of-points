@@ -3,6 +3,15 @@ import points from "../data/points";
 import connections from "../data/connections";
 import { INTERACTIVE_POINTS_CONFIG as CONFIG } from "../config/interactivePointsConfig";
 
+type ResponsiveNumberMap = {
+  xs: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl: number;
+  '2xl': number;
+};
+
 interface IdleAnimationOptions {
   enabled?: boolean;
   distance?: number;
@@ -16,10 +25,10 @@ export interface Point {
   y: number;
   isBlack: boolean;
   label: string;
-  size?: string | number;
+  size?: string | number | ResponsiveNumberMap;
   link?: string;
-  textAngle?: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number };
-  textDistance?: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number };
+  textAngle?: number | ResponsiveNumberMap;
+  textDistance?: number | ResponsiveNumberMap;
   scaleOnHover?: boolean;
   magnifyOnHover?: boolean;
   textAlign?: 'left' | 'right';
@@ -72,7 +81,7 @@ const getCurrentBreakpoint = (): BreakpointKey => {
 
 // Helper function to get responsive value based on current breakpoint
 const getResponsiveValue = (
-  value: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number } | undefined
+  value: number | ResponsiveNumberMap | undefined
 ): number => {
   if (!value) return 0;
   if (typeof value === 'number') return value;
@@ -85,11 +94,14 @@ const getResponsiveValue = (
 const DEFAULT_VIEWPORT_WIDTH = BREAKPOINTS.xl;
 
 const parseSizeValue = (
-  size: string | number | undefined,
+  size: string | number | ResponsiveNumberMap | undefined,
   viewportWidth: number
 ): number => {
   if (!size) return 50;
   if (typeof size === 'number') return size;
+  if (size && typeof size === 'object') {
+    return getResponsiveValue(size as ResponsiveNumberMap);
+  }
 
   const clampMatch = size.match(/clamp\(([^,]+),([^,]+),([^)]+)\)/);
 
