@@ -29,8 +29,8 @@ export const INTERACTIVE_POINTS_CONFIG = {
   BOX_SHADOW_TRANSITION: "box-shadow 0.3s ease-out",
 
   // Text styling
-  BLACK_POINT_FONT_SIZE: "22px",
-  WHITE_POINT_FONT_SIZE: "16px",
+  BLACK_POINT_FONT_SIZE: "clamp(0.875rem,2.5vw,1.5rem)",
+  WHITE_POINT_FONT_SIZE: "clamp(0.75rem,2vw,1rem)",
   TEXT_OFFSET_FROM_CIRCLE: 16, // pixels
 
   // Pull force calculation

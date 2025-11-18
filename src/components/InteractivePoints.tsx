@@ -9,14 +9,67 @@ export interface Point {
   y: number;
   isBlack: boolean;
   label: string;
-  size?: number;
+  size?: string | number;
   link?: string;
+  textAngle?: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number };
+  textDistance?: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number };
+  scaleOnHover?: boolean;
+  magnifyOnHover?: boolean;
 }
 
 interface PointPosition {
   circle: { x: number; y: number; size: number };
-  text: { x: number; y: number; scale: number };
+  text: { x: number; y: number; scale: number; angle: number; distance: number; fontWeight: number };
 }
+
+// Breakpoint widths matching tailwind config
+const BREAKPOINTS = {
+  xs: 320,
+  sm: 640,
+  md: 768,
+  lg: 1024,
+  xl: 1440,
+  '2xl': 1920,
+};
+
+type BreakpointKey = keyof typeof BREAKPOINTS;
+
+// Helper function to get current breakpoint based on window width
+const getCurrentBreakpoint = (): BreakpointKey => {
+  const width = window.innerWidth;
+  if (width >= BREAKPOINTS['2xl']) return '2xl';
+  if (width >= BREAKPOINTS.xl) return 'xl';
+  if (width >= BREAKPOINTS.lg) return 'lg';
+  if (width >= BREAKPOINTS.md) return 'md';
+  if (width >= BREAKPOINTS.sm) return 'sm';
+  return 'xs';
+};
+
+// Helper function to get responsive value based on current breakpoint
+const getResponsiveValue = (
+  value: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number } | undefined
+): number => {
+  if (!value) return 0;
+  if (typeof value === 'number') return value;
+  
+  const breakpoint = getCurrentBreakpoint();
+  return value[breakpoint] ?? 0;
+};
+
+// Helper function to parse size value (can be string like "clamp(...)" or number)
+const parseSizeValue = (size: string | number | undefined): number => {
+  if (!size) return 50;
+  if (typeof size === 'number') return size;
+  
+  // For clamp values, extract the first px value as fallback
+  // clamp(25px, 3.021vw, 58px) -> extract 25
+  const pxMatch = size.match(/(\d+(?:\.\d+)?)px/);
+  if (pxMatch) {
+    return parseFloat(pxMatch[1]);
+  }
+  
+  return 50;
+};
 
 function InteractivePoints() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -38,7 +91,7 @@ function InteractivePoints() {
 
         const baseX = (point.x / CONFIG.PERCENTAGE_DIVISOR) * containerWidth;
         const baseY = (point.y / CONFIG.PERCENTAGE_DIVISOR) * containerHeight;
-        const size = point.size ?? CONFIG.DEFAULT_POINT_SIZE;
+        const size = parseSizeValue(point.size);
         const triggerDistance = size * CONFIG.TRIGGER_DISTANCE_MULTIPLIER;
 
         const distX = baseX - cursorX;
@@ -51,12 +104,12 @@ function InteractivePoints() {
         const initialX = centerX + (baseX - centerX) * animationProgress;
         const initialY = centerY + (baseY - centerY) * animationProgress;
 
-        if (hypotenuse < triggerDistance && animationProgress === 1) {
+        if (hypotenuse < triggerDistance && animationProgress === 1 && point.magnifyOnHover !== false) {
           const angle = Math.atan2(distX, distY);
           const pull =
             (1 - hypotenuse / triggerDistance) / CONFIG.PULL_FORCE_DIVISOR;
           const hoverIntensity = 1 - hypotenuse / triggerDistance;
-          const textScale = point.isBlack
+          const textScale = point.isBlack && point.scaleOnHover !== false
             ? 1 + hoverIntensity * CONFIG.TEXT_SCALE_INTENSITY
             : 1;
 
@@ -74,6 +127,9 @@ function InteractivePoints() {
               x: -Math.sin(angle) * hypotenuse * pull,
               y: -Math.cos(angle) * hypotenuse * pull,
               scale: textScale,
+              angle: getResponsiveValue(point.textAngle),
+              distance: getResponsiveValue(point.textDistance),
+              fontWeight: point.isBlack ? 500 : 400,
             },
           });
         } else {
@@ -83,7 +139,14 @@ function InteractivePoints() {
               y: initialY,
               size: size * animationProgress,
             },
-            text: { x: 0, y: 0, scale: 1 },
+            text: {
+              x: 0,
+              y: 0,
+              scale: 1,
+              angle: getResponsiveValue(point.textAngle),
+              distance: getResponsiveValue(point.textDistance),
+              fontWeight: point.isBlack ? 500 : 400,
+            },
           });
         }
       });
@@ -121,6 +184,9 @@ function InteractivePoints() {
             x: lerp(current.text.x, target.text.x, lerpFactor),
             y: lerp(current.text.y, target.text.y, lerpFactor),
             scale: lerp(current.text.scale, target.text.scale, lerpFactor),
+            angle: lerp(current.text.angle, target.text.angle, lerpFactor),
+            distance: lerp(current.text.distance, target.text.distance, lerpFactor),
+            fontWeight: target.text.fontWeight,
           },
         };
 
@@ -133,7 +199,11 @@ function InteractivePoints() {
           Math.abs(newPos.circle.size - target.circle.size) >
             CONFIG.SIZE_THRESHOLD ||
           Math.abs(newPos.text.scale - target.text.scale) >
-            CONFIG.SCALE_THRESHOLD
+            CONFIG.SCALE_THRESHOLD ||
+          Math.abs(newPos.text.angle - target.text.angle) >
+            CONFIG.POSITION_THRESHOLD ||
+          Math.abs(newPos.text.distance - target.text.distance) >
+            CONFIG.POSITION_THRESHOLD
         ) {
           hasChanges = true;
         }
@@ -245,7 +315,6 @@ function InteractivePoints() {
           );
         })}
       </svg>
-      ;
       {points.map((point) => {
         const pos = pointPositions.get(point.id);
         if (!pos) return null;
@@ -275,17 +344,23 @@ function InteractivePoints() {
                 point.isBlack ? "group-hover:font-bold" : ""
               }`}
               style={{
-                right: `${
-                  pos.circle.size / 2 + CONFIG.TEXT_OFFSET_FROM_CIRCLE
-                }px`,
+                left: "50%",
                 top: "50%",
-                transform: `translateY(-50%) translate(${pos.text.x}px, ${pos.text.y}px) scale(${pos.text.scale})`,
+                transform: (() => {
+                  const angle = pos.text.angle;
+                  const distance = pos.text.distance + pos.circle.size / 2;
+                  const rad = (angle * Math.PI) / 180;
+                  const offsetX = Math.cos(rad) * distance;
+                  const offsetY = Math.sin(rad) * distance;
+                  return `translate(calc(-50% + ${offsetX + pos.text.x}px), calc(-50% + ${offsetY + pos.text.y}px)) scale(${pos.text.scale})`;
+                })(),
                 fontSize: point.isBlack
                   ? CONFIG.BLACK_POINT_FONT_SIZE
                   : CONFIG.WHITE_POINT_FONT_SIZE,
                 opacity: animationProgress,
-                transformOrigin: "right center",
+                transformOrigin: "center",
                 willChange: "transform",
+                fontWeight: pos.text.fontWeight,
               }}
               dangerouslySetInnerHTML={{ __html: point.label }}
             />
