@@ -3,6 +3,13 @@ import points from "../data/points";
 import connections from "../data/connections";
 import { INTERACTIVE_POINTS_CONFIG as CONFIG } from "../config/interactivePointsConfig";
 
+interface IdleAnimationOptions {
+  enabled?: boolean;
+  distance?: number;
+  duration?: number;
+  delay?: number;
+}
+
 export interface Point {
   id: number;
   x: number;
@@ -15,12 +22,30 @@ export interface Point {
   textDistance?: number | { xs: number; sm: number; md: number; lg: number; xl: number; '2xl': number };
   scaleOnHover?: boolean;
   magnifyOnHover?: boolean;
+  textAlign?: 'left' | 'right';
+  idleAnimation?: IdleAnimationOptions;
 }
 
 interface PointPosition {
   circle: { x: number; y: number; size: number };
   text: { x: number; y: number; scale: number; angle: number; distance: number; fontWeight: number };
 }
+
+type IdleStatus = 'disabled' | 'hovering' | 'transitioning' | 'idle';
+
+const IDLE_DEFAULTS = {
+  distance: 8,
+  duration: 3000,
+  delay: 0,
+};
+
+const IDLE_ACTIVATE_LERP = 0.02;
+const IDLE_DEACTIVATE_LERP = 0.35;
+
+const IDLE_STATUS_THRESHOLDS = {
+  idle: 0.85,
+  transitioning: 0.05,
+};
 
 // Breakpoint widths matching tailwind config
 const BREAKPOINTS = {
@@ -61,18 +86,19 @@ const parseSizeValue = (size: string | number | undefined): number => {
   if (!size) return 50;
   if (typeof size === 'number') return size;
   
-  // For clamp values, extract the first px value as fallback
-  // clamp(25px, 3.021vw, 58px) -> extract 25
-  const pxMatch = size.match(/(\d+(?:\.\d+)?)px/);
-  if (pxMatch) {
-    return parseFloat(pxMatch[1]);
+  // For clamp values, extract the maximum px value (last one)
+  // clamp(25px, 3.021vw, 58px) -> extract 58 (the max value)
+  const pxMatches = size.match(/(\d+(?:\.\d+)?)px/g);
+  if (pxMatches && pxMatches.length > 0) {
+    // Get the last px value which is the maximum in clamp()
+    const lastMatch = pxMatches[pxMatches.length - 1];
+    return parseFloat(lastMatch);
   }
   
   return 50;
 };
 
 function InteractivePoints() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [pointPositions, setPointPositions] = useState<
     Map<number, PointPosition>
   >(new Map());
@@ -80,9 +106,22 @@ function InteractivePoints() {
   const containerRef = useRef<HTMLDivElement>(null);
   const targetPositionsRef = useRef<Map<number, PointPosition>>(new Map());
   const animationFrameRef = useRef<number>();
+  const pointerRef = useRef<{ x: number; y: number } | null>(null);
+  const idleActivationRef = useRef(0);
+  const idleActivationFrameRef = useRef<number>();
+  const targetUpdateFrameRef = useRef<number>();
+  const [isHovering, setIsHovering] = useState(false);
+  const hasIdleConfigured = React.useMemo(
+    () => points.some((point) => point.idleAnimation && point.idleAnimation.enabled !== false),
+    []
+  );
+  const [idleActivation, setIdleActivation] = useState(0);
+  const [idleStatus, setIdleStatus] = useState<IdleStatus>(
+    hasIdleConfigured ? 'transitioning' : 'disabled'
+  );
 
   const updateTargetPositions = React.useCallback(
-    (cursorX: number, cursorY: number) => {
+    (cursor: { x: number; y: number } | null, idleStrength: number, time: number) => {
       const newTargets = new Map<number, PointPosition>();
 
       points.forEach((point) => {
@@ -94,67 +133,119 @@ function InteractivePoints() {
         const size = parseSizeValue(point.size);
         const triggerDistance = size * CONFIG.TRIGGER_DISTANCE_MULTIPLIER;
 
-        const distX = baseX - cursorX;
-        const distY = baseY - cursorY;
-        const hypotenuse = Math.sqrt(distX * distX + distY * distY);
+        let idleOffsetX = 0;
+        let idleOffsetY = 0;
 
-        // Apply initial animation interpolation
+        if (
+          point.idleAnimation &&
+          point.idleAnimation.enabled !== false &&
+          idleStrength > IDLE_STATUS_THRESHOLDS.transitioning &&
+          animationProgress === 1
+        ) {
+          const distance = point.idleAnimation.distance ?? IDLE_DEFAULTS.distance;
+          const duration = point.idleAnimation.duration ?? IDLE_DEFAULTS.duration;
+          const delay = point.idleAnimation.delay ?? IDLE_DEFAULTS.delay;
+          const adjustedTime = Math.max(time - delay, 0);
+          const loopProgress = duration > 0 ? (adjustedTime % duration) / duration : 0;
+          const angle = loopProgress * Math.PI * 2;
+          const easedStrength = idleStrength;
+          idleOffsetX = Math.cos(angle) * distance * easedStrength;
+          idleOffsetY = Math.sin(angle) * distance * easedStrength;
+        }
+
+        const idleX = baseX + idleOffsetX;
+        const idleY = baseY + idleOffsetY;
+
+        const pointerActive =
+          !!cursor &&
+          animationProgress === 1 &&
+          (point as Point).magnifyOnHover !== false;
+
         const centerX = containerWidth / 2;
         const centerY = containerHeight / 2;
-        const initialX = centerX + (baseX - centerX) * animationProgress;
-        const initialY = centerY + (baseY - centerY) * animationProgress;
+        const initialX = centerX + (idleX - centerX) * animationProgress;
+        const initialY = centerY + (idleY - centerY) * animationProgress;
 
-        if (hypotenuse < triggerDistance && animationProgress === 1 && point.magnifyOnHover !== false) {
-          const angle = Math.atan2(distX, distY);
-          const pull =
-            (1 - hypotenuse / triggerDistance) / CONFIG.PULL_FORCE_DIVISOR;
-          const hoverIntensity = 1 - hypotenuse / triggerDistance;
-          const textScale = point.isBlack && point.scaleOnHover !== false
-            ? 1 + hoverIntensity * CONFIG.TEXT_SCALE_INTENSITY
-            : 1;
+        if (pointerActive) {
+          const distX = idleX - cursor!.x;
+          const distY = idleY - cursor!.y;
+          const hypotenuse = Math.sqrt(distX * distX + distY * distY);
 
-          newTargets.set(point.id, {
-            circle: {
-              x: baseX - Math.sin(angle) * hypotenuse * pull,
-              y: baseY - Math.cos(angle) * hypotenuse * pull,
-              size:
-                size *
-                (1 +
-                  (1 - hypotenuse / triggerDistance) *
-                    CONFIG.CIRCLE_SIZE_MULTIPLIER),
-            },
-            text: {
-              x: -Math.sin(angle) * hypotenuse * pull,
-              y: -Math.cos(angle) * hypotenuse * pull,
-              scale: textScale,
-              angle: getResponsiveValue(point.textAngle),
-              distance: getResponsiveValue(point.textDistance),
-              fontWeight: point.isBlack ? 500 : 400,
-            },
-          });
-        } else {
-          newTargets.set(point.id, {
-            circle: {
-              x: initialX,
-              y: initialY,
-              size: size * animationProgress,
-            },
-            text: {
-              x: 0,
-              y: 0,
-              scale: 1,
-              angle: getResponsiveValue(point.textAngle),
-              distance: getResponsiveValue(point.textDistance),
-              fontWeight: point.isBlack ? 500 : 400,
-            },
-          });
+          if (hypotenuse < triggerDistance) {
+            const angle = Math.atan2(distX, distY);
+            const pull =
+              (1 - hypotenuse / triggerDistance) / CONFIG.PULL_FORCE_DIVISOR;
+            const hoverIntensity = 1 - hypotenuse / triggerDistance;
+            const textScale = point.isBlack && (point as Point).scaleOnHover !== false
+              ? 1 + hoverIntensity * CONFIG.TEXT_SCALE_INTENSITY
+              : 1;
+            const circleScale = point.isBlack && (point as Point).scaleOnHover !== false
+              ? 1 + (1 - hypotenuse / triggerDistance) * CONFIG.CIRCLE_SIZE_MULTIPLIER
+              : 1;
+
+            newTargets.set(point.id, {
+              circle: {
+                x: idleX - Math.sin(angle) * hypotenuse * pull,
+                y: idleY - Math.cos(angle) * hypotenuse * pull,
+                size: size * circleScale,
+              },
+              text: {
+                x: -Math.sin(angle) * hypotenuse * pull,
+                y: -Math.cos(angle) * hypotenuse * pull,
+                scale: textScale,
+                angle: getResponsiveValue(point.textAngle),
+                distance: getResponsiveValue(point.textDistance),
+                fontWeight: point.isBlack ? 500 : 400,
+              },
+            });
+            return;
+          }
         }
+
+        newTargets.set(point.id, {
+          circle: {
+            x: initialX,
+            y: initialY,
+            size: size * animationProgress,
+          },
+          text: {
+            x: 0,
+            y: 0,
+            scale: 1,
+            angle: getResponsiveValue(point.textAngle),
+            distance: getResponsiveValue(point.textDistance),
+            fontWeight: point.isBlack ? 500 : 400,
+          },
+        });
       });
 
       targetPositionsRef.current = newTargets;
     },
     [animationProgress]
   );
+
+  const updatePointerFromEvent = React.useCallback((event: { clientX: number; clientY: number }) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    pointerRef.current = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+  }, []);
+
+  const handleMouseEnter = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    updatePointerFromEvent(event);
+    setIsHovering(true);
+  }, [updatePointerFromEvent]);
+
+  const handleMouseMove = React.useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    updatePointerFromEvent(event);
+  }, [updatePointerFromEvent]);
+
+  const handleMouseLeave = React.useCallback(() => {
+    setIsHovering(false);
+    pointerRef.current = null;
+  }, []);
 
   // Smooth interpolation function
   const lerp = (start: number, end: number, factor: number) => {
@@ -240,10 +331,21 @@ function InteractivePoints() {
     animate();
   }, []);
 
-  // Initialize positions on mount and when animation progresses
+  // Continuously update target positions to account for idle animation and pointer changes
   useEffect(() => {
-    updateTargetPositions(mousePos.x, mousePos.y);
-  }, [animationProgress, updateTargetPositions, mousePos.x, mousePos.y]);
+    const tick = () => {
+      updateTargetPositions(pointerRef.current, idleActivationRef.current, performance.now());
+      targetUpdateFrameRef.current = requestAnimationFrame(tick);
+    };
+
+    tick();
+
+    return () => {
+      if (targetUpdateFrameRef.current) {
+        cancelAnimationFrame(targetUpdateFrameRef.current);
+      }
+    };
+  }, [updateTargetPositions]);
 
   // Start smooth animation loop
   useEffect(() => {
@@ -256,26 +358,71 @@ function InteractivePoints() {
   }, [animateToTargets]);
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
+    if (!hasIdleConfigured) {
+      idleActivationRef.current = 0;
+      setIdleActivation(0);
+      setIdleStatus('disabled');
+      return;
+    }
 
-        setMousePos({ x, y });
-        updateTargetPositions(x, y);
+    const animateIdleActivation = () => {
+      const target = isHovering ? 0 : 1;
+      const lerpFactor = isHovering ? IDLE_DEACTIVATE_LERP : IDLE_ACTIVATE_LERP;
+      let next = lerp(idleActivationRef.current, target, lerpFactor);
+
+      if (Math.abs(next - target) < 0.001) {
+        next = target;
       }
+
+      if (next !== idleActivationRef.current) {
+        idleActivationRef.current = next;
+        setIdleActivation(next);
+      }
+
+      const resolvedStatus: IdleStatus = (() => {
+        if (!hasIdleConfigured) return 'disabled';
+        if (isHovering && next < IDLE_STATUS_THRESHOLDS.transitioning) {
+          return 'hovering';
+        }
+        if (next > IDLE_STATUS_THRESHOLDS.idle) {
+          return 'idle';
+        }
+        return 'transitioning';
+      })();
+
+      setIdleStatus((prev) => (prev === resolvedStatus ? prev : resolvedStatus));
+
+      idleActivationFrameRef.current = requestAnimationFrame(animateIdleActivation);
     };
 
-    const container = containerRef.current;
-    if (container) {
-      container.addEventListener("mousemove", handleMouseMove);
-      return () => container.removeEventListener("mousemove", handleMouseMove);
-    }
-  }, [updateTargetPositions]);
+    idleActivationFrameRef.current = requestAnimationFrame(animateIdleActivation);
+
+    return () => {
+      if (idleActivationFrameRef.current) {
+        cancelAnimationFrame(idleActivationFrameRef.current);
+      }
+    };
+  }, [hasIdleConfigured, isHovering]);
+
+  const hideStatus = false;
 
   return (
-    <div ref={containerRef} className="relative w-full h-full">
+    <div
+      ref={containerRef}
+      className="relative w-full h-full"
+      onMouseEnter={handleMouseEnter}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+    >
+      {hasIdleConfigured && hideStatus && (
+        <div
+          className="pointer-events-none absolute left-4 top-4 select-none rounded-md bg-black/60 px-3 py-1 text-xs font-medium text-white"
+          style={{ zIndex: CONFIG.POINT_Z_INDEX + 1 }}
+        >
+          Idle status: {idleStatus}
+          <span className="ml-2 opacity-70">{idleActivation.toFixed(2)}</span>
+        </div>
+      )}
       <svg
         className="absolute inset-0 w-full h-full"
         style={{ zIndex: CONFIG.SVG_Z_INDEX }}
@@ -340,7 +487,7 @@ function InteractivePoints() {
               }}
             />
             <span
-              className={`absolute whitespace-nowrap text-black ${
+              className={`absolute whitespace-nowrap text-black leading-none ${
                 point.isBlack ? "group-hover:font-bold" : ""
               }`}
               style={{
@@ -361,6 +508,7 @@ function InteractivePoints() {
                 transformOrigin: "center",
                 willChange: "transform",
                 fontWeight: pos.text.fontWeight,
+                textAlign: ((point as Point).textAlign || 'center') as React.CSSProperties['textAlign'],
               }}
               dangerouslySetInnerHTML={{ __html: point.label }}
             />
