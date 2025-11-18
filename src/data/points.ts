@@ -25,8 +25,8 @@ const points = [
     label: "Installation<br>Partner",
     size: sizes.LARGE,
     link: "/montage-partner",
-    textAngle: { "xs": 280, "sm": 280, "md": 280, "lg": 270, "xl": 270, "2xl": 270 },
-    textDistance: { "xs": 20, "sm": 20, "md": 25, "lg": 30, "xl": 20, "2xl": 40 },
+    textAngle: { "xs": 280, "sm": 280, "md": 280, "lg": 270, "xl": 260, "2xl": 270 },
+    textDistance: { "xs": 20, "sm": 20, "md": 25, "lg": 30, "xl": 35, "2xl": 40 },
     textAlign: "left",
     idleAnimation: {
       enabled: true,
@@ -44,7 +44,7 @@ const points = [
     size: sizes.LARGE,
     link: "/lizenzpartner",
     textAngle: { "xs": 200, "sm": 200, "md": 200, "lg": 200, "xl": 200, "2xl": 200 },
-    textDistance: { "xs": 35, "sm": 40, "md": 45, "lg": 55, "xl": 35, "2xl": 60 },
+    textDistance: { "xs": 35, "sm": 40, "md": 45, "lg": 55, "xl": 55, "2xl": 60 },
     textAlign: "right",
     idleAnimation: {
       enabled: true,
@@ -62,7 +62,7 @@ const points = [
     size: sizes.LARGE,
     link: "/distributionspartner",
     textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
-    textDistance: { "xs": 40, "sm": 60, "md": 60, "lg": 70, "xl": 40, "2xl": 80 },
+    textDistance: { "xs": 40, "sm": 60, "md": 60, "lg": 70, "xl": 70, "2xl": 80 },
     textAlign: "right",
     idleAnimation: {
       enabled: true,
@@ -79,7 +79,7 @@ const points = [
     label: "Strategic<br>Consulting",
     size: sizes.SMALL,
     textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 40, "md": 40, "lg": 45, "xl": 40, "2xl": 50 },
+    textDistance: { "xs": 35, "sm": 40, "md": 40, "lg": 45, "xl": 45, "2xl": 50 },
     textAlign: "right",
   },
   {
@@ -90,7 +90,7 @@ const points = [
     label: "Network<br>Access",
     size: sizes.SMALL,
     textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
-    textDistance: { "xs": 30, "sm": 35, "md": 35, "lg": 45, "xl": 30, "2xl": 45 },
+    textDistance: { "xs": 30, "sm": 35, "md": 35, "lg": 45, "xl": 45, "2xl": 45 },
     textAlign: "right",
   },
   {
@@ -101,7 +101,7 @@ const points = [
     label: "Technology<br>Transfer",
     size: sizes.SMALL,
     textAngle: { "xs": 160, "sm": 160, "md": 160, "lg": 160, "xl": 160, "2xl": 150 },
-    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 80, "2xl": 40 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 45, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -112,7 +112,7 @@ const points = [
     label: "Warehousing<br>& Logistics",
     size: sizes.SMALL,
     textAngle: { "xs": 160, "sm": 160, "md": 180, "lg": 160, "xl": 160, "2xl": 180 },
-    textDistance: { "xs": 40, "sm": 50, "md": 50, "lg": 50, "xl": 40, "2xl": 40 },
+    textDistance: { "xs": 40, "sm": 50, "md": 50, "lg": 50, "xl": 50, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -123,7 +123,7 @@ const points = [
     label: "After Sales<br>Service",
     size: sizes.SMALL,
     textAngle: { "xs": 200, "sm": 200, "md": 200, "lg": 200, "xl": 200, "2xl": 200 },
-    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 35, "2xl": 40 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 45, "2xl": 40 },
     textAlign: "right",
   },
   {
@@ -134,7 +134,7 @@ const points = [
     label: "Distribution",
     size: sizes.SMALL,
     textAngle: { "xs": 180, "sm": 180, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 35, "2xl": 50 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 45, "2xl": 50 },
     textAlign: "right",
   },
   {
@@ -144,8 +144,8 @@ const points = [
     isBlack: false,
     label: "Professional<br>Programs",
     size: sizes.SMALL,
-    textAngle: { "xs": 130, "sm": 130, "md": 180, "lg": 180, "xl": 130, "2xl": 180 },
-    textDistance: { "xs": 35, "sm": 40, "md": 50, "lg": 50, "xl": 35, "2xl": 50 },
+    textAngle: { "xs": 130, "sm": 130, "md": 180, "lg": 180, "xl": 180, "2xl": 180 },
+    textDistance: { "xs": 35, "sm": 40, "md": 50, "lg": 50, "xl": 50, "2xl": 50 },
     textAlign: "right",
   },
   // Additional points without labels (hidden points)
