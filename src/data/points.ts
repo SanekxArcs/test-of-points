@@ -25,7 +25,7 @@ const points = [
     label: "Installation<br>Partner",
     size: sizes.LARGE,
     link: "/montage-partner",
-    textAngle: { "xs": 280, "sm": 280, "md": 280, "lg": 270, "xl": 260, "2xl": 270 },
+    textAngle: { "xs": 280, "sm": 280, "md": 280, "lg": 270, "xl": 260, "2xl": 260 },
     textDistance: { "xs": 20, "sm": 20, "md": 25, "lg": 30, "xl": 35, "2xl": 40 },
     textAlign: "left",
     idleAnimation: {
@@ -112,7 +112,7 @@ const points = [
     label: "Warehousing<br>& Logistics",
     size: sizes.SMALL,
     textAngle: { "xs": 160, "sm": 160, "md": 180, "lg": 160, "xl": 160, "2xl": 180 },
-    textDistance: { "xs": 40, "sm": 50, "md": 50, "lg": 50, "xl": 50, "2xl": 40 },
+    textDistance: { "xs": 40, "sm": 50, "md": 50, "lg": 50, "xl": 50, "2xl": 50 },
     textAlign: "right",
   },
   {
@@ -123,7 +123,7 @@ const points = [
     label: "After Sales<br>Service",
     size: sizes.SMALL,
     textAngle: { "xs": 200, "sm": 200, "md": 200, "lg": 200, "xl": 200, "2xl": 200 },
-    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 45, "2xl": 40 },
+    textDistance: { "xs": 35, "sm": 45, "md": 45, "lg": 45, "xl": 45, "2xl": 45 },
     textAlign: "right",
   },
   {
