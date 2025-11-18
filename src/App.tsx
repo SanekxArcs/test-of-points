@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="min-h-screen">
       <HeroSection />
-      <div className='h-screen w-full bg-amber-600'></div>
+      <div className='h-screen w-full bg-amber-50'></div>
     </div>
   );
 }
